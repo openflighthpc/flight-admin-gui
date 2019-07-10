@@ -1,11 +1,11 @@
 <% if signed_in? %>
   <nav class="navbar navbar-expand-lg navbar-dark mb-1 sticky-top">
     <a class="navbar-brand" href="<%= root_path %>">
-      <%= image_tag 'openflighthpc-logo.png', size: '40x25', class: 'mb-1' %>
+      <%= image_tag 'openflighthpc-logo.png', size: '25x25', class: 'mb-1' %>
       <%= Rails.application.config.application_name %> Appliance
     </a>
     <div class="navbar-nav">
-      <% pages = ['Users', 'SSH', 'Network', 'Assets', 'Console'] %>
+      <% pages = ['Users', 'SSH', 'Console'] %>
 
       <% pages.map { |p| [p, polymorphic_path(p.downcase)] }.each do |page, path| %>
         <% if bolt_on_enabled(page) %>
