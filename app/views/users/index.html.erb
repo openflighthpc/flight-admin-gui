@@ -1,0 +1,150 @@
+<% content_for(:title) { 'User Management' } %>
+
+<div style="text-align: center; display: block;">
+  <div>
+    <h1> Add New User </h1>
+    <%= form_for(:user, url: users_path, html: { class: 'creation-form styled-form' }) do |f| %>
+      <div class="row mb-1">
+        <div class="col-sm-3 form-label">
+          <%= f.label :username, 'Username:' %>
+        </div>
+        <div class="col-sm-9">
+          <%= f.text_field :username, class: 'form-control', required: true %>
+        </div>
+      </div>
+
+      <div class="row mb-1">
+        <div class="col-sm-3 form-label">
+          <%= f.label :email, 'Email:' %>
+        </div>
+        <div class="col-sm-9">
+          <%= f.email_field :email, class: 'form-control', required: true %>
+        </div>
+      </div>
+
+      <hr>
+      <div class="row mb-1">
+        <div class="col-sm-3 form-label">
+          <%= f.label :password, 'Password:' %>
+        </div>
+        <div class="col-sm-9">
+          <%= f.password_field :password, class: 'form-control', required: true %>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-sm-3 form-label">
+          <%= f.label :password_confirmation, 'Confirm password:' %>
+        </div>
+        <div class="col-sm-9">
+          <%= f.password_field :password_confirmation, class: 'form-control', required: true %>
+        </div>
+      </div>
+
+      <%= f.submit 'Add User', class: 'btn btn-primary mt-2' %>
+    <% end %>
+  </div>
+
+  <div class="table-responsive mt-4">
+    <h1> Existing Users </h1><br>
+    <table class="table table-bordered center" style="width: 75%;">
+      <thead>
+        <tr>
+          <th> Username </th>
+          <th> Email Address </th>
+          <th> Modify </th>
+          <th> Delete </th>
+        </tr>
+      </thead>
+      <tbody>
+        <% if @users %>
+          <% @users.each do |user| %>
+            <tr>
+              <td><%= user.username %></td>
+              <td><%= user.email %></td>
+              <td>
+                <button type="button"
+                        class="btn btn-primary"
+                        style="width: 100%;"
+                        data-toggle="modal"
+                        data-target="#modifyModal"
+                        data-username="<%= user.username %>"
+                        data-email="<%= user.email %>"
+                        data-id="<%= user.id %>"
+                >
+                  <i class="fa fa-pencil"></i>
+                </button>
+              </td>
+              <td>
+                <%= link_to raw("<i class=\"fa fa-trash\"></i>"),
+                              users_delete_path(user: user),
+                              class: "btn btn-danger",
+                              style: 'width: 100%;',
+                              data: {
+                                confirm: <<~EOF
+                                  Are you sure you wish to delete this user?
+                                  This action is non-reversible
+                                EOF
+                              },
+                              method: :post
+                %>
+              </td>
+            </tr>
+          <% end %>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div id="modifyModal" class="modal fade" role="dialog">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title center"> Modify User </h4>
+      </div>
+      <div class="modal-body">
+        <%= form_for(
+          :user_modify,
+          url: users_modify_path,
+          html: { class: 'creation-form styled-form' }) do |f|
+        %>
+          <div class="row mb-1">
+            <div class="col-sm-3 form-label">
+              <%= f.label :username, 'Username:' %>
+            </div>
+            <div class="col-sm-9">
+              <%= f.text_field :username, class: 'form-control' %>
+            </div>
+          </div>
+
+          <div class="row mb-1">
+            <div class="col-sm-3 form-label">
+              <%= f.label :email, 'Email:' %>
+            </div>
+            <div class="col-sm-9">
+              <%= f.text_field :email, class: 'form-control' %>
+            </div>
+          </div>
+
+          <hr>
+          <div class="row mb-1">
+            <div class="col-sm-3 form-label">
+              <%= f.label :password, 'Password:' %>
+            </div>
+            <div class="col-sm-9">
+              <%= f.password_field :password, class: 'form-control' %>
+            </div>
+          </div>
+
+          <%= f.hidden_field :id %>
+
+          <%= f.submit 'Update', class: 'btn btn-primary mt-2' %>
+        <% end %>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal"> Close </button>
+      </div>
+    </div>
+  </div>
+</div>
